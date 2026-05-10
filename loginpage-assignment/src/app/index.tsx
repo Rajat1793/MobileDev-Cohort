@@ -18,6 +18,11 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
       >
     <SafeAreaView style={styles.container}>
+      {/* App Logo */}
+      <View style={styles.logoContainer}>
+        <Ionicons name="medical" size={32} color="#fff" />
+      </View>
+
       {/* Sign In heading */}
       <Text style={styles.title}>Sign In</Text>
       <Text style={styles.subtitle}>Please sign in to continue</Text>
@@ -88,6 +93,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
     backgroundColor: "#fff",
+  },
+  logoContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    backgroundColor: "#16a34a",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+    shadowColor: "#16a34a",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  appName: {
+    fontSize: 22,
+    fontFamily: "Nunito_700Bold",
+    color: "#111827",
+    letterSpacing: 1,
+  },
+  appTagline: {
+    fontSize: 12,
+    fontFamily: "Nunito_400Regular",
+    color: "#6b7280",
+    marginBottom: 28,
   },
   title: {
     fontSize: 28,
