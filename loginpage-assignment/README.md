@@ -1,56 +1,73 @@
-# Welcome to your Expo app 👋
+# React Native Sign In Screen
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile authentication screen built with **Expo** and **core React Native components only**, recreated from a [Dribbble design reference](https://dribbble.com/shots/24783022-osler-AI-Telehealth-Telemedicine-App-Sign-In-Sign-Up-UI).
 
-## Get started
+---
 
-1. Install dependencies
+## App Screenshot
 
-   ```bash
-   npm install
-   ```
+> ![Sign In Screen](../loginpage-assignment/src/assets/Screenshot_20260510-141738.jpg)
+> ![Sign In Screen](../loginpage-assignment/src/assets/Screenshot_20260510-141744.jpg)
 
-2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Feature | Details |
+|---|---|
+| App logo section | Green rounded badge with medical cross icon + app name & tagline |
+| Heading & subheading | "Sign In" + "Please sign in to continue" |
+| Email input | Pill-shaped input with mail icon; green border on focus |
+| Password input | Pill-shaped input with lock icon; `secureTextEntry` enabled |
+| Sign In button | Full-width green rounded button |
+| Social login buttons | Facebook, Google, Instagram icon buttons with bordered styling |
+| Forgot Password | Tappable green text link |
+| Sign Up | Inline tappable link in footer |
+| Keyboard handling | `KeyboardAvoidingView` + `ScrollView` for safe keyboard interaction |
+| Font | Nunito (Google Fonts, Vernon Adams) — Regular, SemiBold, Bold |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## Tech Stack
 
-When you're ready, run:
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/) (SDK 55)
+- [Expo Router](https://expo.github.io/router/) — file-based routing
+- [`@expo-google-fonts/nunito`](https://github.com/expo/google-fonts/tree/master/font-packages/nunito) — Nunito font
+- `@expo/vector-icons` (Ionicons) — icons bundled with Expo
+- No third-party UI libraries
 
-```bash
-npm run reset-project
+---
+
+## Project Structure
+
+```
+src/
+└── app/
+    ├── _layout.tsx   # Root layout — loads Nunito fonts, hides header
+    └── index.tsx     # Sign In screen
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## Getting Started
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+# Install dependencies
+npm install
 
-## Learn more
+# Start the development server
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Open in:
+- **iOS Simulator** — press `i`
+- **Android Emulator** — press `a`
+- **Expo Go** (physical device) — scan the QR code
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## Design Reference
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+[Osler AI Telehealth — Dribbble](https://dribbble.com/shots/24783022-osler-AI-Telehealth-Telemedicine-App-Sign-In-Sign-Up-UI)
