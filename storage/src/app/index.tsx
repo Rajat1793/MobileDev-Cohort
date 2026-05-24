@@ -130,173 +130,376 @@
 //   },
 // });
 
-import * as SecureStore from "expo-secure-store";
-import { useState } from "react";
-import {
-  Button,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+// import * as SecureStore from "expo-secure-store";
+// import { useState } from "react";
+// import {
+//   Button,
+//   SafeAreaView,
+//   ScrollView,
+//   Text,
+//   View,
+// } from "react-native";
 
-export default function SecureStoreScreen() {
-  const [output, setOutput] = useState("");
+// export default function SecureStoreScreen() {
+//   const [output, setOutput] = useState("");
 
-  // setItemAsync
-  const saveToken = async () => {
-    await SecureStore.setItemAsync(
-      "token",
-      "abc123"
-    );
+//   // setItemAsync
+//   const saveToken = async () => {
+//     await SecureStore.setItemAsync(
+//       "token",
+//       "abc123"
+//     );
 
-    setOutput("Token Saved");
-  };
+//     setOutput("Token Saved");
+//   };
 
-  // getItemAsync
-  const getToken = async () => {
-    const value =
-      await SecureStore.getItemAsync(
-        "token"
-      );
+//   // getItemAsync
+//   const getToken = async () => {
+//     const value =
+//       await SecureStore.getItemAsync(
+//         "token"
+//       );
 
-    setOutput(value || "No Token Found");
-  };
+//     setOutput(value || "No Token Found");
+//   };
 
-  // deleteItemAsync
-  const deleteToken = async () => {
-    await SecureStore.deleteItemAsync(
-      "token"
-    );
+//   // deleteItemAsync
+//   const deleteToken = async () => {
+//     await SecureStore.deleteItemAsync(
+//       "token"
+//     );
 
-    setOutput("Token Deleted");
-  };
+//     setOutput("Token Deleted");
+//   };
 
-  // isAvailableAsync
-  const checkAvailability = async () => {
-    const available =
-      await SecureStore.isAvailableAsync();
+//   // isAvailableAsync
+//   const checkAvailability = async () => {
+//     const available =
+//       await SecureStore.isAvailableAsync();
 
-    setOutput(
-      available
-        ? "SecureStore Available"
-        : "SecureStore Not Available"
-    );
-  };
+//     setOutput(
+//       available
+//         ? "SecureStore Available"
+//         : "SecureStore Not Available"
+//     );
+//   };
 
-  // Store Object
-  const saveObject = async () => {
-    const user = {
-      name: "Code Snippet",
-      role: "Admin",
-    };
+//   // Store Object
+//   const saveObject = async () => {
+//     const user = {
+//       name: "Code Snippet",
+//       role: "Admin",
+//     };
 
-    await SecureStore.setItemAsync(
-      "user",
-      JSON.stringify(user)
-    );
+//     await SecureStore.setItemAsync(
+//       "user",
+//       JSON.stringify(user)
+//     );
 
-    setOutput("Object Saved");
-  };
+//     setOutput("Object Saved");
+//   };
 
-  // Read Object
-  const getObject = async () => {
-    const data =
-      await SecureStore.getItemAsync(
-        "user"
-      );
+//   // Read Object
+//   const getObject = async () => {
+//     const data =
+//       await SecureStore.getItemAsync(
+//         "user"
+//       );
 
-    if (!data) {
-      setOutput("No User Found");
-      return;
-    }
+//     if (!data) {
+//       setOutput("No User Found");
+//       return;
+//     }
 
-    const parsed = JSON.parse(data);
+//     const parsed = JSON.parse(data);
 
-    setOutput(
-      `${parsed.name} - ${parsed.role}`
-    );
-  };
+//     setOutput(
+//       `${parsed.name} - ${parsed.role}`
+//     );
+//   };
 
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
-      <ScrollView
-        contentContainerStyle={{
-          padding: 20,
-          gap: 12,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: "bold",
-            marginBottom: 10,
-          }}
-        >
-          SecureStore Demo
-        </Text>
+//   return (
+//     <SafeAreaView
+//       style={{
+//         flex: 1,
+//       }}
+//     >
+//       <ScrollView
+//         contentContainerStyle={{
+//           padding: 20,
+//           gap: 12,
+//         }}
+//       >
+//         <Text
+//           style={{
+//             fontSize: 28,
+//             fontWeight: "bold",
+//             marginBottom: 10,
+//           }}
+//         >
+//           SecureStore Demo
+//         </Text>
 
-        <Button
-          title="Save Token"
-          onPress={saveToken}
-        />
+//         <Button
+//           title="Save Token"
+//           onPress={saveToken}
+//         />
 
-        <Button
-          title="Get Token"
-          onPress={getToken}
-        />
+//         <Button
+//           title="Get Token"
+//           onPress={getToken}
+//         />
 
-        <Button
-          title="Delete Token"
-          onPress={deleteToken}
-        />
+//         <Button
+//           title="Delete Token"
+//           onPress={deleteToken}
+//         />
 
-        <Button
-          title="Check Availability"
-          onPress={checkAvailability}
-        />
+//         <Button
+//           title="Check Availability"
+//           onPress={checkAvailability}
+//         />
 
-        <Button
-          title="Save Object"
-          onPress={saveObject}
-        />
+//         <Button
+//           title="Save Object"
+//           onPress={saveObject}
+//         />
 
-        <Button
-          title="Get Object"
-          onPress={getObject}
-        />
+//         <Button
+//           title="Get Object"
+//           onPress={getObject}
+//         />
 
-        <View
-          style={{
-            marginTop: 30,
-            padding: 20,
-            borderWidth: 1,
-            borderRadius: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              marginBottom: 10,
-            }}
-          >
-            Output
-          </Text>
+//         <View
+//           style={{
+//             marginTop: 30,
+//             padding: 20,
+//             borderWidth: 1,
+//             borderRadius: 10,
+//           }}
+//         >
+//           <Text
+//             style={{
+//               fontSize: 18,
+//               fontWeight: "bold",
+//               marginBottom: 10,
+//             }}
+//           >
+//             Output
+//           </Text>
 
-          <Text
-            style={{
-              fontSize: 16,
-            }}
-          >
-            {output}
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+//           <Text
+//             style={{
+//               fontSize: 16,
+//             }}
+//           >
+//             {output}
+//           </Text>
+//         </View>
+//       </ScrollView>
+//     </SafeAreaView>
+//   );
+// }
+
+
+// SQLite Example
+// import * as SQLite from "expo-sqlite";
+// import { useEffect, useState } from "react";
+// import {
+//   Button,
+//   SafeAreaView,
+//   ScrollView,
+//   Text,
+//   View,
+// } from "react-native";
+
+// const db = SQLite.openDatabaseSync("demo.db");
+
+// export default function SQLiteScreen() {
+//   const [output, setOutput] = useState("");
+
+//   // Create Table
+//   const createTable = () => {
+//     db.execSync(`
+//       CREATE TABLE IF NOT EXISTS users (
+//         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         name TEXT,
+//         age INTEGER
+//       );
+//     `);
+
+//     setOutput("Table Created");
+//   };
+
+//   // Insert Data
+//   const insertUser = () => {
+//     db.runSync(
+//       "INSERT INTO users (name, age) VALUES (?, ?)",
+//       "Code Snippet",
+//       22
+//     );
+
+//     setOutput("User Inserted");
+//   };
+
+//   // Get All Users
+//   const getUsers = () => {
+//     const users = db.getAllSync(
+//       "SELECT * FROM users"
+//     );
+
+//     setOutput(JSON.stringify(users, null, 2));
+//   };
+
+//   // Get First User
+//   const getFirstUser = () => {
+//     const user = db.getFirstSync(
+//       "SELECT * FROM users"
+//     );
+
+//     setOutput(JSON.stringify(user, null, 2));
+//   };
+
+//   // Update User
+//   const updateUser = () => {
+//     db.runSync(
+//       "UPDATE users SET age = ? WHERE id = ?",
+//       25,
+//       1
+//     );
+
+//     setOutput("User Updated");
+//   };
+
+//   // Delete User
+//   const deleteUser = () => {
+//     db.runSync(
+//       "DELETE FROM users WHERE id = ?",
+//       1
+//     );
+
+//     setOutput("User Deleted");
+//   };
+
+//   // Drop Table
+//   const dropTable = () => {
+//     db.execSync(`
+//       DROP TABLE IF EXISTS users;
+//     `);
+
+//     setOutput("Table Dropped");
+//   };
+
+//   // Prepare Statement
+//   const prepareStatement = () => {
+//     const statement = db.prepareSync(
+//       "INSERT INTO users (name, age) VALUES (?, ?)"
+//     );
+
+//     statement.executeSync([
+//       "Prepared User",
+//       30,
+//     ]);
+
+//     statement.finalizeSync();
+
+//     setOutput("Prepared Statement Executed");
+//   };
+
+//   useEffect(() => {
+//     createTable();
+//   }, []);
+
+//   return (
+//     <SafeAreaView
+//       style={{
+//         flex: 1,
+//       }}
+//     >
+//       <ScrollView
+//         contentContainerStyle={{
+//           padding: 20,
+//           gap: 12,
+//         }}
+//       >
+//         <Text
+//           style={{
+//             fontSize: 28,
+//             fontWeight: "bold",
+//             marginBottom: 10,
+//           }}
+//         >
+//           SQLite Demo
+//         </Text>
+
+//         <Button
+//           title="Create Table"
+//           onPress={createTable}
+//         />
+
+//         <Button
+//           title="Insert User"
+//           onPress={insertUser}
+//         />
+
+//         <Button
+//           title="Get All Users"
+//           onPress={getUsers}
+//         />
+
+//         <Button
+//           title="Get First User"
+//           onPress={getFirstUser}
+//         />
+
+//         <Button
+//           title="Update User"
+//           onPress={updateUser}
+//         />
+
+//         <Button
+//           title="Delete User"
+//           onPress={deleteUser}
+//         />
+
+//         <Button
+//           title="Prepared Statement"
+//           onPress={prepareStatement}
+//         />
+
+//         <Button
+//           title="Drop Table"
+//           onPress={dropTable}
+//         />
+
+//         <View
+//           style={{
+//             marginTop: 20,
+//             padding: 16,
+//             borderWidth: 1,
+//             borderRadius: 10,
+//           }}
+//         >
+//           <Text
+//             style={{
+//               fontSize: 18,
+//               fontWeight: "bold",
+//               marginBottom: 10,
+//             }}
+//           >
+//             Output
+//           </Text>
+
+//           <Text
+//             selectable
+//             style={{
+//               fontSize: 14,
+//             }}
+//           >
+//             {output}
+//           </Text>
+//         </View>
+//       </ScrollView>
+//     </SafeAreaView>
+//   );
+// }
