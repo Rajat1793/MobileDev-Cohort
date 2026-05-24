@@ -503,3 +503,243 @@
 //     </SafeAreaView>
 //   );
 // }
+
+// Filesystem Example
+import { useState } from "react";
+import {
+  Button,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { File, Directory, Paths } from "expo-file-system";
+
+export default function FileSystemScreen() {
+  const [output, setOutput] = useState("");
+  const [imageUri, setImageUri] = useState<string | null>(null);
+
+  // Write File
+  const writeFile = () => {
+    const file = new File(Paths.document, "demo.txt");
+    file.write("Hello Expo FileSystem 🚀");
+    setOutput("File Written Successfully");
+  };
+
+  // Read File
+  const readFile = async () => {
+    const file = new File(Paths.document, "demo.txt");
+    const data = await file.text();
+    setOutput(data);
+  };
+
+  // Append File
+  const appendFile = async () => {
+    const file = new File(Paths.document, "demo.txt");
+    const oldData = await file.text();
+    file.write(oldData + "\nNew Data Added");
+    setOutput("Data Appended");
+  };
+
+  // Copy File
+  const copyFile = () => {
+    const file = new File(Paths.document, "demo.txt");
+    const dest = new File(Paths.document, "copy-demo.txt");
+    file.copy(dest);
+    setOutput("File Copied");
+  };
+
+  // Move File
+  const moveFile = () => {
+    const src = new File(Paths.document, "copy-demo.txt");
+    const dest = new File(Paths.document, "moved-demo.txt");
+    src.move(dest);
+    setOutput("File Moved");
+  };
+
+  // Delete File
+  const deleteFile = () => {
+    const file = new File(Paths.document, "demo.txt");
+    file.delete();
+    setOutput("File Deleted");
+  };
+
+  // File Info
+  const getFileInfo = () => {
+    const file = new File(Paths.document, "demo.txt");
+    const info = file.info();
+    setOutput(JSON.stringify(info, null, 2));
+  };
+
+  // Read Directory
+  const readDirectory = () => {
+    const entries = Paths.document.list();
+    setOutput(JSON.stringify(entries.map((e) => e.uri), null, 2));
+  };
+
+  // Create Folder
+  const createFolder = () => {
+    const dir = new Directory(Paths.document, "notes");
+    dir.create();
+    setOutput("Folder Created");
+  };
+
+  // Download File
+  const downloadFile = async () => {
+    try {
+      const dest = new File(Paths.document, "image.jpg");
+
+      if (dest.exists) {
+        dest.delete();
+      }
+
+      const downloaded = await File.downloadFileAsync(
+        "https://picsum.photos/200",
+        dest
+      );
+
+      setImageUri(downloaded.uri);
+      setOutput("File Downloaded Successfully");
+    } catch (e) {
+      setOutput(`Download Failed: ${e}`);
+    }
+  };
+
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
+      <ScrollView
+        contentContainerStyle={{
+          padding: 20,
+          gap: 12,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 28,
+            fontWeight: "bold",
+            marginBottom: 10,
+          }}
+        >
+          Expo FileSystem Demo
+        </Text>
+
+        <Button
+          title="Write File"
+          onPress={writeFile}
+        />
+
+        <Button
+          title="Read File"
+          onPress={readFile}
+        />
+
+        <Button
+          title="Append File"
+          onPress={appendFile}
+        />
+
+        <Button
+          title="Copy File"
+          onPress={copyFile}
+        />
+
+        <Button
+          title="Move File"
+          onPress={moveFile}
+        />
+
+        <Button
+          title="Delete File"
+          onPress={deleteFile}
+        />
+
+        <Button
+          title="Get File Info"
+          onPress={getFileInfo}
+        />
+
+        <Button
+          title="Read Directory"
+          onPress={readDirectory}
+        />
+
+        <Button
+          title="Create Folder"
+          onPress={createFolder}
+        />
+
+        <Button
+          title="Download File"
+          onPress={downloadFile}
+        />
+
+        {imageUri && (
+          <Image
+            source={{ uri: imageUri }}
+            style={{ width: "100%", height: 200, borderRadius: 10 }}
+            resizeMode="cover"
+          />
+        )}
+
+        <View
+          style={{
+            marginTop: 20,
+            padding: 16,
+            borderWidth: 1,
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "bold",
+              marginBottom: 10,
+            }}
+          >
+            Output
+          </Text>
+
+          <Text selectable>
+            {output}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+            }}
+          >
+            documentDirectory
+          </Text>
+
+          <Text selectable>
+            {Paths.document.uri}
+          </Text>
+
+          <Text
+            style={{
+              fontWeight: "bold",
+              marginTop: 10,
+            }}
+          >
+            cacheDirectory
+          </Text>
+
+          <Text selectable>
+            {Paths.cache.uri}
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
