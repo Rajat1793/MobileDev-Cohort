@@ -30,6 +30,14 @@ const DEMOS = [
         badge: "LIGHT SENSOR",
         badgeColor: "#FFB347",
     },
+    {
+        route: "/compass-game",
+        emoji: "🧭",
+        title: "Compass Hunt",
+        description: "Lay your phone flat and rotate it\nto match the target compass heading",
+        badge: "MAGNETOMETER",
+        badgeColor: "#B4A0FF",
+    },
 ] as const;
 
 export default function Index() {
@@ -49,7 +57,7 @@ export default function Index() {
                         key={demo.route}
                         style={styles.card}
                         activeOpacity={0.75}
-                        onPress={() => router.push(demo.route)}
+                        onPress={() => router.push(demo.route as any)}
                     >
                         <Text style={styles.emoji}>{demo.emoji}</Text>
                         <View style={styles.cardBody}>
