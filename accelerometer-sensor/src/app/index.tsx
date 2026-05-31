@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ACCENT = "#FF6B2B";
@@ -38,6 +38,14 @@ const DEMOS = [
         badge: "MAGNETOMETER",
         badgeColor: "#B4A0FF",
     },
+    {
+        route: "/shake-detector",
+        emoji: "📳",
+        title: "Shake Detector",
+        description: "Shake your device to trigger events\nand track your shake streak",
+        badge: "DEVICE MOTION",
+        badgeColor: "#60CFFF",
+    },
 ] as const;
 
 export default function Index() {
@@ -45,13 +53,20 @@ export default function Index() {
     const router = useRouter();
 
     return (
-        <View style={[styles.container, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 16 }]}>
+        <View style={[styles.screen, { paddingTop: insets.top }]}>
+
+            {/* Fixed header — stays pinned while cards scroll */}
             <View style={styles.header}>
                 <Text style={styles.title}>SENSOR LAB</Text>
                 <Text style={styles.subtitle}>Expo Sensors — choose a demo</Text>
             </View>
 
-            <View style={styles.list}>
+            {/* Scrollable card list */}
+            <ScrollView
+                style={styles.scroll}
+                contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]}
+                showsVerticalScrollIndicator={false}
+            >
                 {DEMOS.map(demo => (
                     <TouchableOpacity
                         key={demo.route}
@@ -70,20 +85,30 @@ export default function Index() {
                         <Text style={styles.arrow}>›</Text>
                     </TouchableOpacity>
                 ))}
-            </View>
+            </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    screen: {
         flex: 1,
         backgroundColor: "#100A06",
+    },
+    scroll: {
+        flex: 1,
+    },
+    content: {
         paddingHorizontal: 20,
-        gap: 32,
+        paddingTop: 20,
+        gap: 16,
     },
     header: {
         alignItems: "center",
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: "#1E0F06",
     },
     title: {
         fontSize: 30,
