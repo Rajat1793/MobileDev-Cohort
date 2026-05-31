@@ -36,6 +36,30 @@ function clamp(v: number, min: number, max: number) {
     return Math.max(min, Math.min(max, v));
 }
 
+/**
+ * GyroscopeGame
+ *
+ * Core concept: the gyroscope reports angular velocity (rad/s) around each axis.
+ * This component integrates the Y-axis reading (roll) over time to derive a tilt
+ * angle, then uses that angle as a ramp for a ball rolling along a horizontal beam.
+ *
+ * Physics loop (setInterval at ~16 ms ≈ 60 fps):
+ *   1. Integrate tilt:  tiltRef += gyroY * dt  — accumulate rotation each frame.
+ *   2. Dampen tilt:     tiltRef *= dampMult     — prevents runaway rotation.
+ *   3. Clamp tilt to ±0.6 rad so the beam never flips completely.
+ *   4. Derive lateral gravity on the ball: gravity = sin(tilt) * GRAVITY_SCALE * gravityMult
+ *   5. Update ball velocity and position along the beam.
+ *   6. If the ball's X offset exceeds half the current beam width, the player falls off
+ *      and the game ends.
+ *
+ * Difficulty makes the game harder in two independent ways:
+ *   - Higher `gravityMult` → ball accelerates faster down any tilt.
+ *   - Higher `dampMult` (closer to 1.0) → tilt persists longer, giving less margin.
+ *   INSANE sets dampMult = 1.0 (no damping at all — the beam tilts freely forever).
+ *
+ * The beam also shrinks by 18 px every 4 seconds (down to a minimum of 70 px),
+ * making survival progressively harder even without touching the difficulty selector.
+ */
 export default function GyroscopeGame() {
     const insets = useSafeAreaInsets();
     const { available, x, y, z } = useGyroscope();

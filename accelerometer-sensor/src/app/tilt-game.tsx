@@ -52,6 +52,26 @@ function randomTargetPos(arenaW: number, arenaH: number) {
     };
 }
 
+/**
+ * TiltGame
+ *
+ * Core concept: the accelerometer reports the device's tilt as a gravity vector
+ * (x, y, z in g-force). This component maps those x/y values directly to ball
+ * acceleration on a 2-D arena — tilt the phone left and the ball rolls left,
+ * tilt forward and it rolls forward.
+ *
+ * Physics loop (setInterval at ~60 fps):
+ *   1. Read the latest accelerometer values from `accRef` (updated by the sensor listener).
+ *   2. Add scaled acceleration to velocity:  vel += acc * ACC_SCALE
+ *   3. Apply friction each frame:            vel *= FRICTION  (< 1, so the ball slows naturally)
+ *   4. Clamp position to arena bounds and bounce off walls: vel *= -0.4
+ *   5. Check Euclidean distance to the target; if within hit radius, score +1 and
+ *      teleport the target to a new random position.
+ *
+ * All physics values (velocity, position, sensor reading) live in `useRef` so the
+ * interval callback always sees the latest data without triggering re-renders.
+ * React state (`useState`) is written only for values that need to repaint the UI.
+ */
 export function TiltGame() {
     const insets = useSafeAreaInsets();
     const { width: screenW, height: screenH } = useWindowDimensions();

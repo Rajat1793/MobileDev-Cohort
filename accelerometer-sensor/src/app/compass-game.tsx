@@ -66,6 +66,33 @@ function toCardinal(deg: number): string {
     return CARDINAL[Math.round(normalize(deg) / 45) % 8];
 }
 
+/**
+ * CompassGame
+ *
+ * Core concept: the magnetometer reports the ambient magnetic field strength (μT) along
+ * the device's three axes. When the phone lies flat, the X and Y components describe the
+ * horizontal projection of Earth's magnetic field, which points toward magnetic north.
+ * `Math.atan2(x, y)` converts that vector into a compass bearing (0–360°).
+ *
+ * Gameplay loop:
+ *   1. A random target heading (0–359°) is chosen at the start and every 6 seconds.
+ *   2. The player rotates their phone (flat, face-up) to align the live heading with the target.
+ *   3. A `tick` function fires at `tickMs` intervals; if the angular difference between the
+ *      current heading and the target is within the difficulty's `tolerance`, +1 is awarded.
+ *   4. A 30-second countdown ends the round.
+ *
+ * Heading math:
+ *   - `normalize(deg)` wraps any angle to [0, 360).
+ *   - `angleDiff(a, b)` returns the shortest signed difference in (-180, 180] — needed so
+ *     that crossing the 0°/360° boundary (north) doesn't create false large deltas.
+ *
+ * Visual representation:
+ *   - The compass disc rotates by −heading so cardinal labels stay geographically fixed.
+ *   - The orange needle layer rotates by +heading so it always points toward the device's
+ *     current facing direction relative to the disc.
+ *   - The target is shown as a glowing dot at the exact bearing angle on the rim,
+ *     turning green when the tolerance window is satisfied.
+ */
 export default function CompassGame() {
     const insets = useSafeAreaInsets();
     const { available, data } = useMagnetometer();

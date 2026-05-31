@@ -49,6 +49,31 @@ function luxToFraction(lux: number) {
     return clamp(lux / LUX_MAX, 0, 1);
 }
 
+/**
+ * LightGame
+ *
+ * Core concept: the ambient light sensor reports illuminance in lux — a measure of
+ * how much visible light is hitting the device's sensor (usually near the front camera).
+ * This component challenges the player to keep the live lux reading inside a target band
+ * by physically covering or exposing the sensor (e.g. with a finger or by moving toward
+ * a light source).
+ *
+ * Scoring mechanism (setTimeout-based, not setInterval):
+ *   - A recursive `tick` function re-schedules itself at `tickMs` intervals.
+ *   - On each tick it checks whether the current illuminance is within [zoneLow, zoneHigh].
+ *   - If yes, scoreRef is incremented and the new score is written to state.
+ *   - Using setTimeout (rather than setInterval) means changing the difficulty selector
+ *     mid-game takes effect on the very next tick without needing to tear down the loop.
+ *
+ * Difficulty narrows the lux band and speeds up the tick:
+ *   EASY   — 0–600 lux  (almost any lighting)     400 ms/tick
+ *   NORMAL — 50–200 lux (indoor ambient)           200 ms/tick
+ *   HARD   — 80–130 lux (carefully shaded)         150 ms/tick
+ *   INSANE — 95–115 lux (20-lux window, precise)   100 ms/tick
+ *
+ * The vertical lux meter maps 0–LUX_MAX to screen height, with the target zone
+ * highlighted in orange and a glowing ball indicator tracking the live reading.
+ */
 export default function LightGame() {
     const insets = useSafeAreaInsets();
     const { available, illuminance } = useLightSensor();
