@@ -57,7 +57,7 @@ export default function Index() {
 
             {/* Fixed header — stays pinned while cards scroll */}
             <View style={styles.header}>
-                <Text style={styles.title}>SENSOR LAB</Text>
+                <Text style={styles.title}>SENSIFY</Text>
                 <Text style={styles.subtitle}>Expo Sensors — choose a demo</Text>
             </View>
 
