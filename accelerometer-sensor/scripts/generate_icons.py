@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "images")
+STORE = os.path.join(ROOT, "store")
 
 # Brand palette
 BG_DARK = (16, 10, 6)      # #100A06
@@ -105,6 +106,84 @@ def save(img, name):
     print(f"wrote {name}  ({img.size[0]}x{img.size[1]})")
 
 
+def load_font(size):
+    """Load a bold system font, falling back to PIL default."""
+    candidates = [
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+        "/System/Library/Fonts/Avenir Next.ttc",
+        "/System/Library/Fonts/Helvetica.ttc",
+        "/Library/Fonts/Arial Bold.ttf",
+    ]
+    from PIL import ImageFont
+    for path in candidates:
+        if os.path.exists(path):
+            try:
+                return ImageFont.truetype(path, size)
+            except Exception:
+                continue
+    return ImageFont.load_default()
+
+
+def save_store(img, name):
+    os.makedirs(STORE, exist_ok=True)
+    path = os.path.join(STORE, name)
+    img.save(path)
+    print(f"wrote store/{name}  ({img.size[0]}x{img.size[1]})")
+
+
+def store_icon(size=512):
+    """Opaque 512x512 Play Store listing icon (no transparency)."""
+    bg = radial_background(size, BG_DARK2, BG_DARK)
+    img = draw_sensor_mark(size, ACCENT, ACCENT_LIGHT, glow=True, bg=bg)
+    return img.convert("RGB")
+
+
+def feature_graphic(w=1024, h=500):
+    """1024x500 Play Store feature graphic: mark + SENSIFY wordmark."""
+    from PIL import ImageDraw
+    # gradient background
+    img = Image.new("RGB", (w, h), BG_DARK)
+    px = img.load()
+    for y in range(h):
+        for x in range(w):
+            d = (x / w) * 0.6 + (y / h) * 0.4
+            px[x, y] = lerp(BG_DARK2, BG_DARK, min(1.0, d))
+    img = img.convert("RGBA")
+
+    # sensor mark on the left
+    mark_size = int(h * 0.74)
+    mark = draw_sensor_mark(mark_size, ACCENT, ACCENT_LIGHT, glow=True)
+    mx = int(w * 0.05)
+    my = (h - mark_size) // 2
+    img.alpha_composite(mark, (mx, my))
+
+    draw = ImageDraw.Draw(img)
+    tx = mx + mark_size + int(w * 0.04)
+
+    title_font = load_font(96)
+    sub_font = load_font(33)
+
+    title = "SENSIFY"
+    sub = "Sensor-powered mini games"
+
+    tb = draw.textbbox((0, 0), title, font=title_font)
+    sb = draw.textbbox((0, 0), sub, font=sub_font)
+    title_h = tb[3] - tb[1]
+    gap = 28
+    sub_h = sb[3] - sb[1]
+    block_h = title_h + gap + sub_h
+    ty = (h - block_h) // 2 - tb[1]
+
+    draw.text((tx, ty), title, font=title_font, fill=WHITE)
+    underline_y = ty + tb[3] + 14
+    draw.rectangle([tx + 4, underline_y, tx + (tb[2] - tb[0]) * 0.55,
+                    underline_y + 9], fill=ACCENT)
+    draw.text((tx, ty + title_h + gap + 18), sub, font=sub_font,
+              fill=(210, 190, 175))
+
+    return img.convert("RGB")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
 
@@ -138,6 +217,10 @@ def main():
                              dot_only_scale=0.95)
     splash = Image.alpha_composite(splash, smark)
     save(splash, "splash-icon.png")
+
+    # --- Play Store listing assets ---
+    save_store(store_icon(512), "store-icon-512.png")
+    save_store(feature_graphic(1024, 500), "feature-graphic-1024x500.png")
 
     print("\nAll Sensify icon assets generated.")
 
