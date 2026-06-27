@@ -1,15 +1,16 @@
 import { useMagnetometer } from "@/hooks/use-megnometer";
+import { Category, Fonts, palette } from "@/constants/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// ─── Papaya orange dark palette (shared with all games) ──────────────────────
-const ACCENT       = "#FF6B2B";
-const CARD_BG      = "#1C1410";
-const SURFACE      = "#120D09";
-const TARGET_COLOR = "#FFB347";
-const SAFE_COLOR   = "#4ADE80";
-const DANGER_COLOR = "#FF3D00";
+// ─── Brand dark palette (ink-black / cream / coral) ──────────────────────
+const ACCENT       = palette.tertiary; // coral needle
+const CARD_BG      = palette.surface;
+const SURFACE      = palette.surfaceDim;
+const TARGET_COLOR = Category.light;   // amber target marker
+const SAFE_COLOR   = "#7CD9A6";        // on-target green
+const DANGER_COLOR = palette.error;
 
 const GAME_DURATION = 30;   // seconds per round
 const COMPASS_SIZE  = 260;  // diameter of the compass disc in px
@@ -29,10 +30,10 @@ const DIFFICULTY_CONFIG: Record<DiffLevel, {
     tickMs: number;
     color: string;
 }> = {
-    easy:   { label: "EASY",      tolerance: 30, tickMs: 300, color: "#FFCBA4" },
+    easy:   { label: "EASY",      tolerance: 30, tickMs: 300, color: "#7CD9A6" },
     normal: { label: "NORMAL",    tolerance: 20, tickMs: 200, color: ACCENT },
-    hard:   { label: "HARD",      tolerance: 10, tickMs: 150, color: "#FF8C42" },
-    insane: { label: "😈 INSANE", tolerance: 5,  tickMs: 100, color: "#FF3D00" },
+    hard:   { label: "HARD",      tolerance: 10, tickMs: 150, color: Category.light },
+    insane: { label: "😈 INSANE", tolerance: 5,  tickMs: 100, color: palette.error },
 };
 
 /** Normalize an angle to [0, 360). */
@@ -188,7 +189,7 @@ export default function CompassGame() {
 
     // ── Derived display values ────────────────────────────────────────────
     const timerPct    = timeLeft / GAME_DURATION;
-    const timerColor  = timeLeft <= 10 ? DANGER_COLOR : timeLeft <= 20 ? "#FF8C42" : ACCENT;
+    const timerColor  = timeLeft <= 10 ? DANGER_COLOR : timeLeft <= 20 ? Category.light : ACCENT;
     const isNewBest   = gameState === "gameover" && score > 0 && score >= highScore;
     const activeColor = inZone ? SAFE_COLOR : DANGER_COLOR;
     const { tolerance, color: diffColor } = DIFFICULTY_CONFIG[difficulty];
@@ -293,9 +294,9 @@ export default function CompassGame() {
                         {/* Cardinal direction labels */}
                         {([
                             { lbl: "N", angle: 0,   color: DANGER_COLOR, size: 15 },
-                            { lbl: "E", angle: 90,  color: "#5A3A20",    size: 12 },
-                            { lbl: "S", angle: 180, color: "#5A3A20",    size: 12 },
-                            { lbl: "W", angle: 270, color: "#5A3A20",    size: 12 },
+                            { lbl: "E", angle: 90,  color: palette.onSurfaceVariant, size: 12 },
+                            { lbl: "S", angle: 180, color: palette.onSurfaceVariant, size: 12 },
+                            { lbl: "W", angle: 270, color: palette.onSurfaceVariant, size: 12 },
                         ]).map(({ lbl, angle, color, size }) => {
                             const rad = (angle - 90) * (Math.PI / 180);
                             const lr  = R - 26;
@@ -325,7 +326,7 @@ export default function CompassGame() {
                                     position: "absolute",
                                     width: tickW,
                                     height: tickLen,
-                                    backgroundColor: isMajor ? "#4A2E14" : "#2E1A0A",
+                                    backgroundColor: isMajor ? palette.outline : palette.outlineVariant,
                                     left: R + rimR * Math.cos(rad) - tickW / 2,
                                     top:  R + rimR * Math.sin(rad) - tickLen / 2,
                                     // Rotate each tick so it radiates outward from the center
@@ -373,7 +374,7 @@ export default function CompassGame() {
                             position: "absolute",
                             width: 3,
                             height: R / 2 - 10,
-                            backgroundColor: "#3A1F0A",
+                            backgroundColor: palette.outline,
                             left: R - 1.5,
                             top: R + 10,
                             borderRadius: 2,
@@ -385,7 +386,7 @@ export default function CompassGame() {
 
                     {/* Live heading readout centered on the compass */}
                     <View style={[styles.centerReadout, { left: R - 40, top: R - 22 }]}>
-                        <Text style={[styles.headingNum, { color: gameState === "playing" && inZone ? SAFE_COLOR : "#FFFFFF" }]}>
+                        <Text style={[styles.headingNum, { color: gameState === "playing" && inZone ? SAFE_COLOR : palette.onSurface }]}>
                             {Math.round(normalize(heading))}°
                         </Text>
                         <Text style={styles.headingDirLabel}>{toCardinal(heading)}</Text>
@@ -445,20 +446,21 @@ export default function CompassGame() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#100A06",
+        backgroundColor: palette.background,
         paddingHorizontal: 20,
         gap: 12,
     },
     header: { alignItems: "center" },
     title: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 26,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 5,
     },
     subtitle: {
+        fontFamily: Fonts.body,
         fontSize: 11,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1,
         marginTop: 2,
     },
@@ -470,14 +472,14 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         alignItems: "center",
         backgroundColor: CARD_BG,
     },
     speedBtnText: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 10,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 0.8,
     },
 
@@ -491,30 +493,30 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     timerBox: { flex: 1.5 },
     hudLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
     },
     hudNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 28,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         lineHeight: 34,
     },
     timerNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 34,
-        fontWeight: "800",
         lineHeight: 40,
     },
     timerBarBg: {
         width: "90%",
         height: 3,
-        backgroundColor: "#2E1A0A",
+        backgroundColor: palette.outline,
         borderRadius: 2,
         marginTop: 4,
         overflow: "hidden",
@@ -535,17 +537,17 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 14,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     targetBannerLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
     },
     targetBannerVal: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 16,
-        fontWeight: "800",
         letterSpacing: 1,
     },
     tolerancePill: {
@@ -555,8 +557,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     tolerancePillText: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 10,
-        fontWeight: "700",
         letterSpacing: 0.8,
     },
 
@@ -572,7 +574,7 @@ const styles = StyleSheet.create({
         borderRadius: R,
         backgroundColor: SURFACE,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     innerRing: {
         position: "absolute",
@@ -580,7 +582,7 @@ const styles = StyleSheet.create({
         height: COMPASS_SIZE - 8,
         borderRadius: (COMPASS_SIZE - 8) / 2,
         borderWidth: 1,
-        borderColor: "#1E0F06",
+        borderColor: palette.outlineVariant,
         left: 4,
         top: 4,
     },
@@ -608,6 +610,7 @@ const styles = StyleSheet.create({
     },
     compassDir: {
         position: "absolute",
+        fontFamily: Fonts.headlineBold,
         letterSpacing: 0.5,
     },
     pivotCircle: {
@@ -615,7 +618,7 @@ const styles = StyleSheet.create({
         width: 12,
         height: 12,
         borderRadius: 6,
-        backgroundColor: "#2A1208",
+        backgroundColor: palette.surfaceElevated,
         borderWidth: 2,
         borderColor: ACCENT,
         left: R - 6,
@@ -627,14 +630,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     headingNum: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 22,
-        fontWeight: "800",
         lineHeight: 26,
     },
     headingDirLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 11,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 2,
     },
     zoneBadge: {
@@ -648,8 +651,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
     },
     zoneBadgeText: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 10,
-        fontWeight: "800",
         letterSpacing: 1.5,
     },
 
@@ -658,33 +661,34 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(16,8,4,0.92)",
+        backgroundColor: "rgba(10,11,14,0.92)",
         borderRadius: R,
         gap: 8,
         paddingHorizontal: 20,
     },
     overlayEmoji: { fontSize: 42 },
     overlayTitle: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 22,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 4,
     },
     overlayHint: {
+        fontFamily: Fonts.body,
         fontSize: 13,
-        color: "#6B3E1E",
+        color: palette.onSurfaceVariant,
         textAlign: "center",
         lineHeight: 20,
     },
     gameOverScore: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 15,
-        color: "#A0673A",
-        fontWeight: "600",
+        color: palette.onSurfaceVariant,
     },
     newBest: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 15,
         color: TARGET_COLOR,
-        fontWeight: "700",
     },
     startBtn: {
         marginTop: 10,
@@ -699,8 +703,8 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     startBtnText: {
+        fontFamily: Fonts.bodyBold,
         color: "#FFFFFF",
-        fontWeight: "800",
         fontSize: 14,
         letterSpacing: 2,
     },
@@ -711,12 +715,12 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 14,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     sensorTitle: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
         marginBottom: 10,
     },
@@ -728,23 +732,24 @@ const styles = StyleSheet.create({
     },
     valueItemBorder: {
         borderLeftWidth: 1,
-        borderLeftColor: "#2E1A0A",
+        borderLeftColor: palette.outline,
     },
     axisLabel: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 10,
         color: ACCENT,
-        fontWeight: "700",
         letterSpacing: 1,
         marginBottom: 2,
     },
     axisValue: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 15,
-        fontWeight: "600",
-        color: "#FFFFFF",
+        color: palette.onSurface,
     },
     unavailable: {
+        fontFamily: Fonts.body,
         marginTop: 8,
-        color: "#FF3D00",
+        color: palette.error,
         fontSize: 12,
         textAlign: "center",
     },

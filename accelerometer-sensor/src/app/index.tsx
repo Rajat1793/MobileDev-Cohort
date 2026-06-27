@@ -1,9 +1,7 @@
 import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const ACCENT = "#FF6B2B";
-const CARD_BG = "#1C1410";
+import { Category, Fonts, palette, Typography } from "@/constants/theme";
 
 const DEMOS = [
     {
@@ -12,7 +10,7 @@ const DEMOS = [
         title: "Tilt Ball Game",
         description: "Roll the glowing ball into targets\nby tilting your device",
         badge: "ACCELEROMETER",
-        badgeColor: ACCENT,
+        badgeColor: Category.accelerometer,
     },
     {
         route: "/gyroscope-game",
@@ -20,7 +18,7 @@ const DEMOS = [
         title: "Gyro Balance",
         description: "Keep the glowing ball on the beam\nas it shrinks — tilt to balance!",
         badge: "GYROSCOPE",
-        badgeColor: "#FF8C42",
+        badgeColor: Category.gyroscope,
     },
     {
         route: "/light-game",
@@ -28,7 +26,7 @@ const DEMOS = [
         title: "Light Control",
         description: "Cover or expose the light sensor\nto keep brightness in the target zone",
         badge: "LIGHT SENSOR",
-        badgeColor: "#FFB347",
+        badgeColor: Category.light,
     },
     {
         route: "/compass-game",
@@ -36,7 +34,7 @@ const DEMOS = [
         title: "Compass Hunt",
         description: "Lay your phone flat and rotate it\nto match the target compass heading",
         badge: "MAGNETOMETER",
-        badgeColor: "#B4A0FF",
+        badgeColor: Category.magnetometer,
     },
     {
         route: "/shake-detector",
@@ -44,7 +42,7 @@ const DEMOS = [
         title: "Shake Detector",
         description: "Shake your device to trigger events\nand track your shake streak",
         badge: "DEVICE MOTION",
-        badgeColor: "#60CFFF",
+        badgeColor: Category.motion,
     },
 ] as const;
 
@@ -93,7 +91,7 @@ export default function Index() {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#100A06",
+        backgroundColor: palette.background,
     },
     scroll: {
         flex: 1,
@@ -108,17 +106,18 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
         borderBottomWidth: 1,
-        borderBottomColor: "#1E0F06",
+        borderBottomColor: palette.outlineVariant,
     },
     title: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 30,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 6,
     },
     subtitle: {
+        fontFamily: Fonts.body,
         fontSize: 12,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1,
         marginTop: 4,
     },
@@ -126,10 +125,10 @@ const styles = StyleSheet.create({
         gap: 16,
     },
     card: {
-        backgroundColor: CARD_BG,
+        backgroundColor: palette.surface,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         padding: 20,
         flexDirection: "row",
         alignItems: "center",
@@ -156,23 +155,23 @@ const styles = StyleSheet.create({
         marginBottom: 2,
     },
     badgeText: {
-        fontSize: 9,
-        fontWeight: "700",
-        letterSpacing: 1.2,
+        ...Typography.badge,
     },
     cardTitle: {
+        fontFamily: Fonts.headlineSemibold,
         fontSize: 17,
-        fontWeight: "700",
-        color: "#FFFFFF",
+        color: palette.onSurface,
+        letterSpacing: -0.2,
     },
     cardDesc: {
+        fontFamily: Fonts.body,
         fontSize: 12,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         lineHeight: 18,
     },
     arrow: {
         fontSize: 28,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         fontWeight: "300",
     },
 });

@@ -1,13 +1,14 @@
 import { useShake } from "@/hooks/use-shake";
+import { Category, Fonts, palette } from "@/constants/theme";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// ─── Papaya orange dark palette (shared with all games) ──────────────────────
-const ACCENT       = "#FF6B2B";
-const CARD_BG      = "#1C1410";
-const SURFACE      = "#120D09";
-const TARGET_COLOR = "#FFB347";
+// ─── Brand dark palette (ink-black / cream / coral) ──────────────────────
+const ACCENT       = palette.tertiary; // coral
+const CARD_BG      = palette.surface;
+const SURFACE      = palette.surfaceDim;
+const TARGET_COLOR = Category.light;   // amber accent (best streak)
 
 /**
  * ShakeDetector
@@ -32,9 +33,9 @@ const TARGET_COLOR = "#FFB347";
 type Sensitivity = "low" | "medium" | "high";
 
 const SENSITIVITY_CONFIG: Record<Sensitivity, { label: string; threshold: number; color: string }> = {
-    low:    { label: "LOW",    threshold: 2.2, color: "#FFCBA4" },
+    low:    { label: "LOW",    threshold: 2.2, color: "#7CD9A6" },
     medium: { label: "MEDIUM", threshold: 1.8, color: ACCENT },
-    high:   { label: "HIGH",   threshold: 1.2, color: "#FF3D00" },
+    high:   { label: "HIGH",   threshold: 1.2, color: palette.error },
 };
 
 /** Format a Date to HH:MM:SS.mmm */
@@ -123,7 +124,7 @@ export default function ShakeDetector() {
     });
     const orbBorder = glowAnim.interpolate({
         inputRange:  [0, 1],
-        outputRange: ["#2E1A0A", ACCENT],
+        outputRange: [palette.outline, ACCENT],
     });
 
     return (
@@ -160,10 +161,10 @@ export default function ShakeDetector() {
                     <Text style={styles.hudNumber}>{shakeCount}</Text>
                 </View>
                 <View style={[styles.hudBox, styles.timerBox, streak > 0 && { borderColor: ACCENT }]}>
-                    <Text style={[styles.timerNumber, { color: streak > 0 ? ACCENT : "#FFFFFF" }]}>
+                    <Text style={[styles.timerNumber, { color: streak > 0 ? ACCENT : palette.onSurface }]}>
                         {streak}
                     </Text>
-                    <Text style={[styles.hudLabel, { color: streak > 0 ? ACCENT : "#5A3A20" }]}>
+                    <Text style={[styles.hudLabel, { color: streak > 0 ? ACCENT : palette.onSurfaceVariant }]}>
                         STREAK
                     </Text>
                     <Text style={styles.streakHint}>resets after 5 s</Text>
@@ -228,20 +229,21 @@ export default function ShakeDetector() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#100A06",
+        backgroundColor: palette.background,
         paddingHorizontal: 20,
         gap: 12,
     },
     header: { alignItems: "center" },
     title: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 26,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 5,
     },
     subtitle: {
+        fontFamily: Fonts.body,
         fontSize: 11,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1,
         marginTop: 2,
     },
@@ -253,14 +255,14 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         alignItems: "center",
         backgroundColor: CARD_BG,
     },
     speedBtnText: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 10,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 0.8,
     },
 
@@ -274,29 +276,30 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     timerBox: { flex: 1.5 },
     hudLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
     },
     hudNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 28,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         lineHeight: 34,
     },
     timerNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 34,
-        fontWeight: "800",
         lineHeight: 40,
     },
     streakHint: {
+        fontFamily: Fonts.body,
         fontSize: 8,
-        color: "#3A1F0A",
+        color: palette.onSurfaceVariant,
         marginTop: 2,
         letterSpacing: 0.5,
     },
@@ -323,9 +326,9 @@ const styles = StyleSheet.create({
     },
     orbEmoji: { fontSize: 40 },
     orbLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 11,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 0.8,
         textAlign: "center",
         paddingHorizontal: 12,
@@ -337,7 +340,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 14,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         gap: 6,
     },
     logHeader: {
@@ -347,20 +350,21 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     sensorTitle: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
     },
     clearBtn: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 9,
-        fontWeight: "700",
         color: ACCENT,
         letterSpacing: 1,
     },
     logEmpty: {
+        fontFamily: Fonts.body,
         fontSize: 12,
-        color: "#3A1F0A",
+        color: palette.onSurfaceVariant,
         textAlign: "center",
         paddingVertical: 8,
     },
@@ -370,30 +374,31 @@ const styles = StyleSheet.create({
         gap: 10,
         paddingVertical: 3,
         borderBottomWidth: 1,
-        borderBottomColor: "#1E0F06",
+        borderBottomColor: palette.outlineVariant,
     },
     logIndex: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 10,
-        fontWeight: "700",
-        color: "#3A1F0A",
+        color: palette.onSurfaceVariant,
         width: 32,
     },
     logTime: {
         flex: 1,
+        fontFamily: Fonts.bodySemibold,
         fontSize: 12,
-        fontWeight: "600",
-        color: "#A0673A",
+        color: palette.onSurfaceVariant,
         fontVariant: ["tabular-nums"],
     },
     logLatest: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 9,
-        fontWeight: "700",
         color: ACCENT,
         letterSpacing: 0.8,
     },
 
     unavailable: {
-        color: "#FF3D00",
+        fontFamily: Fonts.body,
+        color: palette.error,
         fontSize: 12,
         textAlign: "center",
     },

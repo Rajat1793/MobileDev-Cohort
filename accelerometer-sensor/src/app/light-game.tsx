@@ -1,4 +1,5 @@
 import { useLightSensor } from "@/hooks/use-light";
+import { Category, Fonts, palette } from "@/constants/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,13 +10,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const LUX_MAX = 1000;     // lux cap for visual meter
 const GAME_DURATION = 30; // seconds per round
 
-// --- Papaya orange dark palette ---
-const ACCENT = "#FF6B2B";
-const CARD_BG = "#1C1410";
-const SURFACE = "#120D09";
-const TARGET_COLOR = "#FFB347";
-const SAFE_COLOR = "#4ADE80";   // zone colour when inside target
-const DANGER_COLOR = "#FF3D00"; // colour when outside target
+// --- Brand dark palette (ink-black / cream / coral) ---
+const ACCENT = palette.tertiary;
+const CARD_BG = palette.surface;
+const SURFACE = palette.surfaceDim;
+const TARGET_COLOR = Category.light;   // amber target zone
+const SAFE_COLOR = "#7CD9A6";   // zone colour when inside target
+const DANGER_COLOR = palette.error; // colour when outside target
 
 type GameState = "idle" | "playing" | "gameover";
 type DiffLevel = "easy" | "normal" | "hard" | "insane";
@@ -33,10 +34,10 @@ const DIFFICULTY_CONFIG: Record<DiffLevel, {
     tickMs: number;
     color: string;
 }> = {
-    easy:   { label: "EASY",      zoneLow: 0,   zoneHigh: 600, tickMs: 400, color: "#FFCBA4" },
+    easy:   { label: "EASY",      zoneLow: 0,   zoneHigh: 600, tickMs: 400, color: "#7CD9A6" },
     normal: { label: "NORMAL",    zoneLow: 50,  zoneHigh: 200, tickMs: 200, color: ACCENT },
-    hard:   { label: "HARD",      zoneLow: 80,  zoneHigh: 130, tickMs: 150, color: "#FF8C42" },
-    insane: { label: "😈 INSANE", zoneLow: 95,  zoneHigh: 115, tickMs: 100, color: "#FF3D00" },
+    hard:   { label: "HARD",      zoneLow: 80,  zoneHigh: 130, tickMs: 150, color: Category.light },
+    insane: { label: "😈 INSANE", zoneLow: 95,  zoneHigh: 115, tickMs: 100, color: palette.error },
 };
 
 /** Clamp v between min and max (inclusive). */
@@ -148,7 +149,7 @@ export default function LightGame() {
 
     // Derived display values
     const timerPct = timeLeft / GAME_DURATION;
-    const timerColor = timeLeft <= 10 ? DANGER_COLOR : timeLeft <= 20 ? "#FF8C42" : ACCENT;
+    const timerColor = timeLeft <= 10 ? DANGER_COLOR : timeLeft <= 20 ? Category.light : ACCENT;
     const isNewBest = gameState === "gameover" && score > 0 && score >= highScore;
     const luxFraction = luxToFraction(illuminance);
     const { zoneLow, zoneHigh } = DIFFICULTY_CONFIG[difficulty];
@@ -314,20 +315,21 @@ export default function LightGame() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#100A06",
+        backgroundColor: palette.background,
         paddingHorizontal: 20,
         gap: 12,
     },
     header: { alignItems: "center" },
     title: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 26,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 5,
     },
     subtitle: {
+        fontFamily: Fonts.body,
         fontSize: 11,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1,
         marginTop: 2,
     },
@@ -342,14 +344,14 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         alignItems: "center",
         backgroundColor: CARD_BG,
     },
     speedBtnText: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 10,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 0.8,
     },
 
@@ -363,30 +365,30 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     timerBox: { flex: 1.5 },
     hudLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
     },
     hudNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 28,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         lineHeight: 34,
     },
     timerNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 34,
-        fontWeight: "800",
         lineHeight: 40,
     },
     timerBarBg: {
         width: "90%",
         height: 3,
-        backgroundColor: "#2E1A0A",
+        backgroundColor: palette.outline,
         borderRadius: 2,
         marginTop: 4,
         overflow: "hidden",
@@ -402,7 +404,7 @@ const styles = StyleSheet.create({
         backgroundColor: SURFACE,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
@@ -413,32 +415,33 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(16,8,4,0.90)",
+        backgroundColor: "rgba(10,11,14,0.92)",
         gap: 8,
         paddingHorizontal: 24,
     },
     overlayEmoji: { fontSize: 42 },
     overlayTitle: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 22,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 4,
     },
     overlayHint: {
+        fontFamily: Fonts.body,
         fontSize: 13,
-        color: "#6B3E1E",
+        color: palette.onSurfaceVariant,
         textAlign: "center",
         lineHeight: 20,
     },
     gameOverScore: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 15,
-        color: "#A0673A",
-        fontWeight: "600",
+        color: palette.onSurfaceVariant,
     },
     newBest: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 15,
         color: TARGET_COLOR,
-        fontWeight: "700",
     },
     startBtn: {
         marginTop: 10,
@@ -453,8 +456,8 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     startBtnText: {
+        fontFamily: Fonts.bodyBold,
         color: "#FFFFFF",
-        fontWeight: "800",
         fontSize: 14,
         letterSpacing: 2,
     },
@@ -470,10 +473,10 @@ const styles = StyleSheet.create({
     },
     meterTrack: {
         width: 40,
-        backgroundColor: "#1C1410",
+        backgroundColor: palette.surface,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         overflow: "visible",
         position: "relative",
         justifyContent: "flex-end",
@@ -526,14 +529,16 @@ const styles = StyleSheet.create({
     meterTopLabel: {
         position: "absolute",
         top: 0,
+        fontFamily: Fonts.body,
         fontSize: 11,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
     },
     meterBottomLabel: {
         position: "absolute",
         bottom: 0,
+        fontFamily: Fonts.body,
         fontSize: 11,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
     },
     zoneLabelHigh: {
         position: "absolute",
@@ -544,9 +549,9 @@ const styles = StyleSheet.create({
         left: 0,
     },
     zoneLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 12,
         color: TARGET_COLOR,
-        fontWeight: "600",
     },
 
     // Status badge
@@ -557,18 +562,18 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 50,
         borderWidth: 1,
-        backgroundColor: "rgba(16,8,4,0.7)",
+        backgroundColor: "rgba(10,11,14,0.72)",
         alignItems: "center",
     },
     zoneBadgeText: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 11,
-        fontWeight: "800",
         letterSpacing: 1.5,
     },
     luxReading: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 18,
-        fontWeight: "700",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         marginTop: 2,
     },
 
@@ -578,12 +583,12 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 14,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     sensorTitle: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
         marginBottom: 10,
     },
@@ -594,21 +599,22 @@ const styles = StyleSheet.create({
     },
     sensorDivider: {
         width: 1,
-        backgroundColor: "#2E1A0A",
+        backgroundColor: palette.outline,
     },
     sensorLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1,
         marginBottom: 4,
     },
     sensorValue: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 14,
-        fontWeight: "700",
-        color: "#FFFFFF",
+        color: palette.onSurface,
     },
     unavailable: {
+        fontFamily: Fonts.body,
         marginTop: 10,
         color: DANGER_COLOR,
         fontSize: 12,

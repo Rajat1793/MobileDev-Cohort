@@ -1,4 +1,5 @@
 import { useAccelerometer } from "@/hooks/use-accelerometer";
+import { Category, Fonts, palette } from "@/constants/theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
     StyleSheet,
@@ -16,11 +17,11 @@ const HALF_BALL = BALL_SIZE / 2;
 const HALF_TARGET = TARGET_SIZE / 2;
 const GAME_DURATION = 30;          // seconds per round
 
-// Papaya orange dark mode palette
-const ACCENT = "#FF6B2B";        // papaya orange
-const TARGET_COLOR = "#FFB347";  // light orange / mango
-const CARD_BG = "#1C1410";       // very dark warm brown
-const SURFACE = "#120D09";       // near-black warm
+// Brand dark palette (ink-black / cream / coral)
+const ACCENT = Category.accelerometer; // coral (primary accent)
+const TARGET_COLOR = "#7CD9A6";        // mint-green success target
+const CARD_BG = palette.surface;       // elevated card surface
+const SURFACE = palette.surfaceDim;     // recessed arena well
 
 type GameState = "idle" | "playing" | "gameover";
 type SpeedLevel = "slow" | "normal" | "fast" | "insane";
@@ -181,7 +182,7 @@ export function TiltGame() {
     }, [arenaW, arenaH]);
 
     const timerPct = timeLeft / GAME_DURATION;
-    const timerColor = timeLeft <= 10 ? "#FF3D00" : timeLeft <= 20 ? "#FF8C42" : ACCENT;
+    const timerColor = timeLeft <= 10 ? palette.error : timeLeft <= 20 ? Category.light : ACCENT;
     const isNewBest = gameState === "gameover" && score > 0 && score >= highScore;
 
     return (
@@ -293,7 +294,7 @@ export function TiltGame() {
                             <View style={styles.barBg}>
                                 <View style={[styles.barFill, {
                                     width: `${Math.min(Math.abs(val) * 100, 100)}%`,
-                                    backgroundColor: val >= 0 ? ACCENT : "#FF3D00",
+                                    backgroundColor: val >= 0 ? ACCENT : palette.error,
                                 }]} />
                             </View>
                         </View>
@@ -310,7 +311,7 @@ export function TiltGame() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#100A06",
+        backgroundColor: palette.background,
         paddingHorizontal: 20,
         gap: 12,
     },
@@ -318,14 +319,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     title: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 26,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 5,
     },
     subtitle: {
+        fontFamily: Fonts.body,
         fontSize: 11,
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1,
         marginTop: 2,
     },
@@ -340,14 +342,14 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         alignItems: "center",
         backgroundColor: CARD_BG,
     },
     speedBtnText: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 10,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 0.8,
     },
 
@@ -364,32 +366,32 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     timerBox: {
         flex: 1.5,
     },
     hudLabel: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
     },
     hudNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 28,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         lineHeight: 34,
     },
     timerNumber: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 34,
-        fontWeight: "800",
         lineHeight: 40,
     },
     timerBarBg: {
         width: "90%",
         height: 3,
-        backgroundColor: "#2E1A0A",
+        backgroundColor: palette.outline,
         borderRadius: 2,
         marginTop: 4,
         overflow: "hidden",
@@ -404,7 +406,7 @@ const styles = StyleSheet.create({
         backgroundColor: SURFACE,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
@@ -414,20 +416,20 @@ const styles = StyleSheet.create({
         position: "absolute",
         width: "100%",
         height: 1,
-        backgroundColor: "#1E0F06",
+        backgroundColor: palette.outlineVariant,
     },
     crossV: {
         position: "absolute",
         width: 1,
         height: "100%",
-        backgroundColor: "#1E0F06",
+        backgroundColor: palette.outlineVariant,
     },
     cornerDot: {
         position: "absolute",
         width: 5,
         height: 5,
         borderRadius: 3,
-        backgroundColor: "#3A1F0A",
+        backgroundColor: palette.outline,
     },
 
     // Overlay
@@ -435,33 +437,34 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(16,8,4,0.90)",
+        backgroundColor: "rgba(10,11,14,0.92)",
         gap: 8,
     },
     overlayEmoji: {
         fontSize: 42,
     },
     overlayTitle: {
+        fontFamily: Fonts.headlineBold,
         fontSize: 22,
-        fontWeight: "800",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         letterSpacing: 4,
     },
     overlayHint: {
+        fontFamily: Fonts.body,
         fontSize: 13,
-        color: "#6B3E1E",
+        color: palette.onSurfaceVariant,
         textAlign: "center",
         lineHeight: 20,
     },
     gameOverScore: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 15,
-        color: "#A0673A",
-        fontWeight: "600",
+        color: palette.onSurfaceVariant,
     },
     newBest: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 15,
         color: TARGET_COLOR,
-        fontWeight: "700",
     },
     startBtn: {
         marginTop: 10,
@@ -476,8 +479,8 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     startBtnText: {
+        fontFamily: Fonts.bodyBold,
         color: "#FFFFFF",
-        fontWeight: "800",
         fontSize: 14,
         letterSpacing: 2,
     },
@@ -526,12 +529,12 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 14,
         borderWidth: 1,
-        borderColor: "#2E1A0A",
+        borderColor: palette.outline,
     },
     sensorTitle: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 9,
-        fontWeight: "700",
-        color: "#5A3A20",
+        color: palette.onSurfaceVariant,
         letterSpacing: 1.5,
         marginBottom: 10,
     },
@@ -545,25 +548,25 @@ const styles = StyleSheet.create({
     },
     valueItemBorder: {
         borderLeftWidth: 1,
-        borderLeftColor: "#2E1A0A",
+        borderLeftColor: palette.outline,
     },
     axisLabel: {
+        fontFamily: Fonts.bodyBold,
         fontSize: 10,
         color: ACCENT,
-        fontWeight: "700",
         letterSpacing: 1,
         marginBottom: 2,
     },
     axisValue: {
+        fontFamily: Fonts.bodySemibold,
         fontSize: 15,
-        fontWeight: "600",
-        color: "#FFFFFF",
+        color: palette.onSurface,
         marginBottom: 6,
     },
     barBg: {
         width: "100%",
         height: 3,
-        backgroundColor: "#2E1A0A",
+        backgroundColor: palette.outline,
         borderRadius: 2,
         overflow: "hidden",
     },
@@ -572,8 +575,9 @@ const styles = StyleSheet.create({
         borderRadius: 2,
     },
     unavailable: {
+        fontFamily: Fonts.body,
         marginTop: 8,
-        color: "#FF3D00",
+        color: palette.error,
         fontSize: 12,
         textAlign: "center",
     },

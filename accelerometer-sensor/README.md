@@ -1,8 +1,62 @@
-# Welcome to your Expo app 👋
+# Sensify 🎮📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Five sensors. Five games.** Sensify turns your phone's hardware sensors into a
+collection of fast, fully-offline mini-games. Tilt, rotate, shake, cover the
+light sensor, and chase a compass heading — every game is powered by a real
+device sensor.
 
-## Get started
+- **Package:** `com.rajat.sensify`
+- **Version:** 1.0.0
+- **Platform:** Android & iOS (built with Expo)
+- **Privacy:** 100% offline — no accounts, no network, no data collection.
+
+## 🎯 Games
+
+| Game | Sensor | How to play |
+|------|--------|-------------|
+| **Tilt Ball** | Accelerometer | Tilt your device to roll the glowing ball into targets before time runs out. |
+| **Gyro Balance** | Gyroscope | Rotate left/right to keep the ball balanced on a shrinking beam. |
+| **Light Control** | Light sensor | Cover or expose the ambient light sensor to keep brightness inside the target zone. |
+| **Compass Hunt** | Magnetometer | Lay the phone flat and rotate it to match the target compass heading. |
+| **Shake Detector** | Device motion | Shake the device to score and build up a shake streak. |
+
+Each game has multiple difficulty levels and tracks your best score locally.
+
+## 🛠️ Tech stack
+
+- **[Expo](https://expo.dev) SDK 55** with the **New Architecture** and React Compiler
+- **[Expo Router](https://docs.expo.dev/router/introduction)** for file-based, typed routing
+- **[expo-sensors](https://docs.expo.dev/versions/latest/sdk/sensors/)** — Accelerometer, Gyroscope, Magnetometer, LightSensor, DeviceMotion
+- **React Native 0.83** / **React 19**
+- **TypeScript**
+
+## 📁 Project structure
+
+```
+accelerometer-sensor/
+├── app.json                 # Expo app config (name, icons, plugins, build props)
+├── eas.json                 # EAS Build/Submit profiles
+├── src/
+│   ├── app/                 # Screens (file-based routes)
+│   │   ├── index.tsx        # Home — game menu
+│   │   ├── tilt-game.tsx
+│   │   ├── gyroscope-game.tsx
+│   │   ├── light-game.tsx
+│   │   ├── compass-game.tsx
+│   │   └── shake-detector.tsx
+│   └── hooks/               # Sensor hooks (one per sensor)
+│       ├── use-accelerometer.ts
+│       ├── use-gyroscope.ts
+│       ├── use-light.ts
+│       ├── use-megnometer.ts
+│       ├── use-devicemotion.ts
+│       └── use-shake.ts
+├── assets/images/           # App icon, adaptive icon, splash, favicon
+├── scripts/                 # Icon + screenshot generation (PIL)
+└── store/                   # Play Store listing, graphics & screenshots
+```
+
+## 🚀 Get started
 
 1. Install dependencies
 
@@ -16,41 +70,43 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   Then open it on a **physical device** (Expo Go or a dev build) or an emulator.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+> **Note:** the games rely on real hardware sensors, so they only run on a
+> physical device or an emulator with sensor support — not in the web browser.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📦 Building for production (EAS)
 
-## Get a fresh project
-
-When you're ready, run:
+Production builds are configured in [`eas.json`](eas.json).
 
 ```bash
-npm run reset-project
+# Android App Bundle (.aab) for Google Play
+eas build --platform android --profile production
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+The production profile enables R8/ProGuard minification and resource shrinking
+(via `expo-build-properties`) so the upload includes a deobfuscation mapping.
 
-### Other setup steps
+## 🏪 Publishing
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+All Google Play store assets and guidance live in the [`store/`](store/) folder:
 
-## Learn more
+- [`store/PLAY_STORE_LISTING.md`](store/PLAY_STORE_LISTING.md) — listing text, content rating & data-safety answers
+- [`store/RELEASE_NOTES.md`](store/RELEASE_NOTES.md) — release notes
+- [`store/privacy-policy.html`](store/privacy-policy.html) — hostable privacy policy
+- [`store/store-icon-512.png`](store/store-icon-512.png) — 512×512 app icon
+- [`store/feature-graphic-1024x500.png`](store/feature-graphic-1024x500.png) — feature graphic
+- [`store/screenshots/`](store/screenshots/) — phone, 7" and 10" tablet screenshots ([workflow](store/screenshots/README.md))
+- [`PUBLISHING.md`](PUBLISHING.md) — full publishing checklist
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🎨 Regenerating assets
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+python3 scripts/generate_icons.py        # app icon, adaptive icon, splash, store graphics
+python3 scripts/frame_screenshots.py     # frame raw screenshots into store sizes
+```
 
-## Join the community
+## 📄 Privacy
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+See [PRIVACY_POLICY.md](PRIVACY_POLICY.md) for full privacy details. Sensify
+collects no data and works entirely offline.
